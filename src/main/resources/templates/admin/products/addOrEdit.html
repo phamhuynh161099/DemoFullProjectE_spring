@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/dashboardLayout.html}">
+
+<head>
+
+</head>
+
+<body>
+
+	<!-- <section class="row" layout:fragment="content">
+			<div class="col-6 offset-3 mt-4">
+				Add or Edit
+			</div>
+		</section> -->
+
+
+	<section class="row" layout:fragment="content">
+		<div class="col mt-4">
+			<form th:action="@{/admin/products/saveOrUpdate}" enctype="multipart/form-data" method="post"
+				th:object="${product}">
+				<div class="card">
+					<div class="card-header">
+						<h2 th:text="${product.isEdit?'Edit Product':'Add New Product'}">Add New Product</h2>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-7">
+								<input type="hidden" th:field="*{isEdit}"/>
+								<div class="form-group" th:if="${product.isEdit}">
+									<label for="productId">Product Id</label>
+									<input type="text" readonly th:field="*{productId}" class="form-control" name="productId"
+										id="productId" aria-describedby="productIdHid" placeholder="Enter Product Id">
+									<small id="productIdHid" class="form-text text-muted">product
+										id is required</small>
+								</div>
+								<div class="form-group">
+									<label for="name">Name</label>
+									<input type="text" class="form-control" name="name" id="name"
+										aria-describedby="namehId" placeholder="Enter Name" th:field="*{name}">
+									<small id="namehId" class="form-text text-muted">name is required</small>
+								</div>
+
+								<div class="form-group">
+									<label for="quantity">Quantity</label>
+									<input type="text" class="form-control" name="quantity" id="quantity"
+										th:field="*{quantity}" aria-describedby="quantityHid" placeholder="">
+									<small id="quantityHid" class="form-text text-muted">quantity
+										is required</small>
+								</div>
+
+
+								<div class="form-group">
+									<label for="categoryId">Category Id</label>
+									<select th:field="*{categoryId}" class="form-control" name="categoryId"
+										id="categoryId">
+										<option th:each="item : ${categories}" th:value="${item.categoryId}"
+											th:text="${item.name}" th:selected="${item.categoryId==product.categoryId}">
+
+										</option>
+									</select>
+								</div>
+
+								<div class="form-group">
+									<label for="status">Status</label>
+									<select class="form-control" th:field="*{status}" name="status" id="status">
+										<option value="0">Out of Stock</option>
+										<option value="1">On Sale</option>
+										<option value="2">Featured</option>
+										<option value="3">Bestseller</option>
+										<option value="4">Out of Order</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-5">
+								<script>
+									function chooseFile(fileInput) {
+										if (fileInput.files && fileInput.files[0]) {
+											var reader = new FileReader();
+
+											reader.onload = function (e) {
+												$('#image').attr('src', e.target.result);
+											}
+
+											reader.readAsDataURL(fileInput.files[0]);
+										}
+									}
+								</script>
+								<img id="image" 
+								th:src="${product.image!=null?'/admin/products/images/'+product.image:'images/image-default.jpg'}"
+								src="/images/image-default.jpg" width="90%" class="img-fluid" alt="">
+								<div class="form-group">
+									<label for="productImage">Image File</label>
+									<input 
+									onchange="chooseFile(this)"
+									type="file" class="form-control-file" name="imageFile" id="productImage"
+										placeholder="" aria-describedby="productImageHid"> <small id="productImageHid"
+										class="form-text text-muted">product
+										image is required</small>
+								</div>
+								<div class="input-group form-group">
+									<span class="input-group-text">Unit Price</span>
+									<input type="text" name="unitPrice" th:field="*{unitPrice}" id="unitPrice"
+										class="form-control" placeholder="Enter Unit Price"> <span
+										class="input-group-text">$</span>
+								</div>
+
+								<div class="input-group form-group">
+									<span class="input-group-text">Discount</span>
+									<input type="text" name="discount" th:field="*{discount}" id="discount"
+										class="form-control" placeholder="Enter Discount"> <span
+										class="input-group-text">%</span>
+								</div>
+							</div>
+
+						</div>
+						<div class="row">
+							<div class="col">
+								<div class="form-group">
+									<label for="description">Description</label>
+									<textarea class="form-control" name="description" id="description"
+										th:field="*{description}" rows="5"></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-footer text-muted">
+						<a th:href="@{/admin/products/add}" class="btn btn-success">New</a>
+						<button th:text="${product.isEdit?'Update':'Save'}" class="btn btn-primary">Save</button>
+						<a th:if="${product.isEdit}" th:href="@{'/admin/products/delete/'+${product.productId}}" class="btn btn-danger float-right">Delete</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</section>
+</body>
+
+</html>
